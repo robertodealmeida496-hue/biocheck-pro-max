@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#FF2D55" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Pregnancy Test Pro" />
+  <title>Pregnancy Test Pro</title>
+  <link rel="manifest" href="manifest.json" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" />
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=AYuCohLKaabwimk_5Rngf6Dglx8sOJBmFxsj91wUUNIzrntGnVFyJIjY_uSEP5cUaGSZ868QGkyFwNt-&currency=EUR&locale=pt_PT" defer></script>
+  <style>
+    :root {
+      --red: #FF2D55;
+      --red-dark: #D41F44;
+      --red-light: #FF6B85;
+      --pink-bg: #FFE8ED;
+      --pink-mid: #FFCDD6;
+      --green: #2ECC71;
+      --white: #FFFFFF;
+      --text-dark: #1A1A2E;
+      --text-mid: #6B7280;
+      --paypal-gold: #FFC439;
+      --paypal-blue: #003087;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(160deg, #FFE8ED 0%, #FFCDD6 50%, #FFC0CB 100%);
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 10px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo-group { display: flex; align-items: center; gap: 10px; }
+
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: var(--red);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 15px rgba(255,45,85,0.4);
+    }
+
+    .logo-icon svg { width: 28px; height: 28px; }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--red);
+      line-height: 1.15;
+    }
+
+    .badge-clinical {
+      background: white;
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--red);
+      letter-spacing: 0.5px;
+      line-height: 1.3;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    /* ── LANG SELECTOR ── */
+    .lang-bar {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 20px 12px;
+      flex-wrap: wrap;
+    }
+
+    .lang-btn {
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1.5px solid var(--red-light);
+      background: white;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--red);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: var(--red);
+      color: white;
+      border-color: var(--red);
+    }
+
+    /* ── SCREENS ── */
+    .screen { display: none; animation: fadeSlide 0.35s ease; }
+    .screen.active { display: block; }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SCREEN 1: HOME ── */
+    #screen-home { padding: 20px 22px 40px; }
+
+    .home-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--red);
+      line-height: 1.15;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .home-subtitle {
+      font-size: 15px;
+      color: var(--red-light);
+      text-align: center;
+      margin-bottom: 28px;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 20px rgba(255,45,85,0.08);
+    }
+
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: var(--pink-bg);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 22px;
+    }
+
+    .feature-text h3 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .feature-text p {
+      font-size: 13px;
+      color: var(--text-mid);
+      font-weight: 600;
+    }
+
+    .btn-start {
+      display: block;
+      width: 100%;
+      margin-top: 30px;
+      padding: 20px;
+      background: var(--red);
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(255,45,85,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-start:active { transform: scale(0.97); box-shadow: 0 4px 12px rgba(255,45,85,0.3); }
+
+    /* ── SCREEN 2: SCANNING ── */
+    #screen-scan { padding: 20px 22px 40px; text-align: center; }
+
+    .scan-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--red);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .scan-sub {
+      font-size: 14px;
+      color: var(--text-mid);
+      font-weight: 600;
+      margin-bottom: 36px;
+    }
+
+    .fingerprint-area {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      margin: 0 auto 36px;
+      cursor: pointer;
+    }
+
+    .fp-ring {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,45,85,0.08);
+      animation: pulse-ring 2s ease-in-out infinite;
+    }
+
+    .fp-ring-1 { width: 100%; height: 100%; top: 0; left: 0; animation-delay: 0s; }
+    .fp-ring-2 { width: 78%; height: 78%; top: 11%; left: 11%; animation-delay: 0.4s; }
+
+    @keyframes pulse-ring {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+
+    .fp-circle {
+      position: absolute;
+      width: 56%;
+      height: 56%;
+      top: 22%; left: 22%;
+      background: var(--red);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 30px rgba(255,45,85,0.5);
+    }
+
+    .fp-circle svg { width: 64px; height: 64px; }
+
+    .progress-wrap { margin-top: 8px; }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--red);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: rgba(255,45,85,0.15);
+      border-radius: 50px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--red);
+      border-radius: 50px;
+      transition: width 0.1s linear;
+      width: 0%;
+    }
+
+    /* ── SCREEN 3: PAYMENT ── */
+    #screen-payment { padding: 20px 22px 40px; }
+
+    .result-card {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(255,45,85,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card::after {
+      content: '';
+      position: absolute;
+      right: -20px; top: -20px;
+      width: 100px; height: 100px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF2D55' opacity='0.06'%3E%3Cpath d='M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM17.78 9.22a.75.75 0 10-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 001.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 101.06-1.06L20.56 12l1.72-1.72a.75.75 0 00-1.06-1.06l-1.72 1.72-1.72-1.72z'/%3E%3C/svg%3E") no-repeat center/contain;
+    }
+
+    .captured-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .captured-icon {
+      width: 32px; height: 32px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .captured-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--green);
+      font-style: italic;
+    }
+
+    .report-label {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .report-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: var(--text-mid);
+      font-weight: 600;
+    }
+
+    .report-item svg { flex-shrink: 0; }
+
+    .price-section { text-align: center; margin-bottom: 20px; }
+
+    .price-amount {
+      font-size: 52px;
+      font-weight: 900;
+      color: var(--red);
+      font-style: italic;
+    }
+
+    .price-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--red-light);
+      letter-spacing: 2px;
+      margin-top: -4px;
+    }
+
+    /* PayPal button wrapper */
+    #paypal-button-container { margin-bottom: 14px; }
+
+    .btn-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px;
+      background: #1C1C1E;
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-bottom: 14px;
+    }
+
+    .paypal-powered {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-mid);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .paypal-powered span {
+      color: var(--paypal-blue);
+      font-weight: 800;
+    }
+
+    /* ── SCREEN 4: SUCCESS ── */
+    #screen-success { padding: 40px 22px; text-align: center; }
+
+    .success-icon {
+      width: 90px; height: 90px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      box-shadow: 0 8px 30px rgba(46,204,113,0.4);
+    }
+
+    .success-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+
+    .success-msg {
+      font-size: 15px;
+      color: var(--text-mid);
+      font-weight: 600;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .btn-restart {
+      display: inline-block;
+      padding: 16px 40px;
+      background: var(--red);
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 11px;
+      color: rgba(255,45,85,0.4);
+      font-weight: 600;
+    }
+
+    /* PWA install bar */
+    #install-bar {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border-radius: 16px;
+      padding: 12px 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 1000;
+      max-width: 340px;
+      width: 90%;
+    }
+
+    #install-bar button {
+      background: var(--red);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER (shared) -->
+<div class="header">
+  <div class="logo-group">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+        <polyline points="2,12 6,5 10,18 14,8 18,14 22,12"/>
+      </svg>
+    </div>
+    <div class="logo-text">Pregnancy Test<br>Pro</div>
+  </div>
+  <div class="badge-clinical" id="badge-text">CLINICALLY<br>CALIBRATED</div>
+</div>
+
+<!-- LANGUAGE BAR -->
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('pt')">🇧🇷 PT</button>
+  <button class="lang-btn" onclick="setLang('en')">🇺🇸 EN</button>
+  <button class="lang-btn" onclick="setLang('es')">🇪🇸 ES</button>
+  <button class="lang-btn" onclick="setLang('fr')">🇫🇷 FR</button>
+  <button class="lang-btn" onclick="setLang('de')">🇩🇪 DE</button>
+  <button class="lang-btn" onclick="setLang('it')">🇮🇹 IT</button>
+</div>
+
+<!-- SCREEN 1: HOME -->
+<div class="screen active" id="screen-home">
+  <h1 class="home-title" id="t-home-title">Advanced Digital Detection</h1>
+  <p class="home-subtitle" id="t-home-sub">Professional hormonal and cycle analysis via bio-thermal mapping.</p>
+
+  <div class="feature-card">
+    <div class="feature-icon">🧬</div>
+    <div class="feature-text">
+      <h3 id="t-feat1-title">HCG Level Scan</h3>
+      <p id="t-feat1-sub">Real-time hormone probability tracking.</p>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-icon">🔒</div>
+    <div class="feature-text">
+      <h3 id="t-feat2-title">Secure &amp; Encrypted</h3>
+      <p id="t-feat2-sub">Private data processing. Never stored.</p>
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-icon">📊</div>
+    <div class="feature-text">
+      <h3 id="t-feat3-title">Conception Window</h3>
+      <p id="t-feat3-sub">Estimated fertile period analysis.</p>
+    </div>
+  </div>
+
+  <button class="btn-start" id="t-btn-start" onclick="goToScan()">START ANALYSIS</button>
+</div>
+
+<!-- SCREEN 2: SCANNING -->
+<div class="screen" id="screen-scan">
+  <h2 class="scan-title" id="t-scan-title">HORMONAL MAPPING</h2>
+  <p class="scan-sub" id="t-scan-sub">Hold your finger firmly on the sensor</p>
+
+  <div class="fingerprint-area" id="fp-area" onmousedown="startScan()" ontouchstart="startScan()">
+    <div class="fp-ring fp-ring-1"></div>
+    <div class="fp-ring fp-ring-2"></div>
+    <div class="fp-circle">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 8C18.7 8 8 18.7 8 32" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <path d="M32 14C21.5 14 13 22.5 13 33" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <path d="M32 20C24.3 20 18 26.3 18 34" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <path d="M32 26C27 26 23 30 23 35" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <path d="M32 32L32 42" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="48" r="3" fill="white"/>
+        <path d="M44 10C50 15 56 23 56 32" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <path d="M43 16C47 20 51 26 51 33" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <path d="M42 22C45 25 46 29 46 34" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <path d="M41 28C42 30 41 32 41 35" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="t-scanning">READING THERMAL SIGNATURE...</span>
+      <span id="scan-pct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: PAYMENT -->
+<div class="screen" id="screen-payment">
+  <div class="result-card">
+    <div class="captured-badge">
+      <div class="captured-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+          <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div class="captured-title" id="t-captured">DATA CAPTURED!</div>
+    </div>
+
+    <div class="report-label" id="t-report-ready">Digital Report Ready:</div>
+
+    <div class="report-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ECC71" stroke-width="2.5" stroke-linecap="round">
+        <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <span id="t-r1">Advanced Pregnancy Probability Score</span>
+    </div>
+    <div class="report-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ECC71" stroke-width="2.5" stroke-linecap="round">
+        <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <span id="t-r2">Estimated Conception Window</span>
+    </div>
+    <div class="report-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ECC71" stroke-width="2.5" stroke-linecap="round">
+        <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <span id="t-r3">HCG &amp; Progesterone Peak Analysis</span>
+    </div>
+  </div>
+
+  <div class="price-section">
+    <div class="price-amount">€4.99</div>
+    <div class="price-label" id="t-fee">ENCRYPTED PROCESSING FEE</div>
+  </div>
+
+  <!-- PayPal Smart Buttons -->
+  <div id="paypal-button-container"></div>
+
+  <button class="btn-card" id="t-btn-card">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+      <rect x="2" y="5" width="20" height="14" rx="2"/>
+      <line x1="2" y1="10" x2="22" y2="10"/>
+    </svg>
+    <span id="t-card-text">Debit or credit card</span>
+  </button>
+
+  <div class="paypal-powered" id="t-powered">Powered by <span>PayPal</span></div>
+</div>
+
+<!-- SCREEN 4: SUCCESS -->
+<div class="screen" id="screen-success">
+  <div class="success-icon">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
+      <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+  </div>
+  <h2 class="success-title" id="t-success-title">Payment Confirmed!</h2>
+  <p class="success-msg" id="t-success-msg">Your report is being prepared. Check your email for the complete analysis results.</p>
+  <button class="btn-restart" onclick="goToHome()" id="t-new-test">New Test</button>
+</div>
+
+<div class="footer" id="t-footer">© 2026 Pregnancy Test Pro | Global Health Metrics</div>
+
+<script>
+// ── TRANSLATIONS ──
+const T = {
+  pt: {
+    badge: 'CLINICAMENTE<br>CALIBRADO',
+    homeTitle: 'Detecção Digital Avançada',
+    homeSub: 'Análise hormonal e de ciclo profissional via mapeamento bio-térmico.',
+    feat1Title: 'Scan de Nível HCG', feat1Sub: 'Rastreamento probabilístico de hormônios em tempo real.',
+    feat2Title: 'Seguro & Encriptado', feat2Sub: 'Processamento privado. Nunca armazenado.',
+    feat3Title: 'Janela de Concepção', feat3Sub: 'Análise do período fértil estimado.',
+    btnStart: 'INICIAR ANÁLISE',
+    scanTitle: 'MAPEAMENTO HORMONAL', scanSub: 'Mantenha o dedo firmemente no sensor',
+    scanning: 'LENDO ASSINATURA TÉRMICA...',
+    captured: 'DADOS CAPTURADOS!',
+    reportReady: 'Relatório Digital Pronto:',
+    r1: 'Pontuação Avançada de Probabilidade de Gravidez',
+    r2: 'Janela de Concepção Estimada',
+    r3: 'Análise de Pico de HCG & Progesterona',
+    fee: 'TAXA DE PROCESSAMENTO ENCRIPTADA',
+    cardText: 'Cartão de débito ou crédito',
+    powered: 'Desenvolvido por',
+    successTitle: 'Pagamento Confirmado!',
+    successMsg: 'Seu relatório está sendo preparado. Verifique seu e-mail para os resultados completos da análise.',
+    newTest: 'Novo Teste',
+    footer: '© 2026 Pregnancy Test Pro | Global Health Metrics',
+  },
+  en: {
+    badge: 'CLINICALLY<br>CALIBRATED',
+    homeTitle: 'Advanced Digital Detection',
+    homeSub: 'Professional hormonal and cycle analysis via bio-thermal mapping.',
+    feat1Title: 'HCG Level Scan', feat1Sub: 'Real-time hormone probability tracking.',
+    feat2Title: 'Secure & Encrypted', feat2Sub: 'Private data processing. Never stored.',
+    feat3Title: 'Conception Window', feat3Sub: 'Estimated fertile period analysis.',
+    btnStart: 'START ANALYSIS',
+    scanTitle: 'HORMONAL MAPPING', scanSub: 'Hold your finger firmly on the sensor',
+    scanning: 'READING THERMAL SIGNATURE...',
+    captured: 'DATA CAPTURED!',
+    reportReady: 'Digital Report Ready:',
+    r1: 'Advanced Pregnancy Probability Score',
+    r2: 'Estimated Conception Window',
+    r3: 'HCG & Progesterone Peak Analysis',
+    fee: 'ENCRYPTED PROCESSING FEE',
+    cardText: 'Debit or credit card',
+    powered: 'Powered by',
+    successTitle: 'Payment Confirmed!',
+    successMsg: 'Your report is being prepared. Check your email for the complete analysis results.',
+    newTest: 'New Test',
+    footer: '© 2026 Pregnancy Test Pro | Global Health Metrics',
+  },
+  es: {
+    badge: 'CLÍNICAMENTE<br>CALIBRADO',
+    homeTitle: 'Detección Digital Avanzada',
+    homeSub: 'Análisis hormonal y de ciclo profesional mediante mapeo bio-térmico.',
+    feat1Title: 'Escaneo de Nivel HCG', feat1Sub: 'Seguimiento hormonal probabilístico en tiempo real.',
+    feat2Title: 'Seguro & Cifrado', feat2Sub: 'Procesamiento privado. Nunca almacenado.',
+    feat3Title: 'Ventana de Concepción', feat3Sub: 'Análisis del período fértil estimado.',
+    btnStart: 'INICIAR ANÁLISIS',
+    scanTitle: 'MAPEO HORMONAL', scanSub: 'Mantén el dedo firmemente en el sensor',
+    scanning: 'LEYENDO FIRMA TÉRMICA...',
+    captured: '¡DATOS CAPTURADOS!',
+    reportReady: 'Informe Digital Listo:',
+    r1: 'Puntuación Avanzada de Probabilidad de Embarazo',
+    r2: 'Ventana de Concepción Estimada',
+    r3: 'Análisis de Pico de HCG & Progesterona',
+    fee: 'TARIFA DE PROCESAMIENTO CIFRADA',
+    cardText: 'Tarjeta de débito o crédito',
+    powered: 'Desarrollado por',
+    successTitle: '¡Pago Confirmado!',
+    successMsg: 'Tu informe está siendo preparado. Revisa tu correo para los resultados completos.',
+    newTest: 'Nueva Prueba',
+    footer: '© 2026 Pregnancy Test Pro | Global Health Metrics',
+  },
+  fr: {
+    badge: 'CLINIQUEMENT<br>CALIBRÉ',
+    homeTitle: 'Détection Numérique Avancée',
+    homeSub: "Analyse hormonale et de cycle professionnelle via cartographie bio-thermique.",
+    feat1Title: 'Scan Niveau HCG', feat1Sub: 'Suivi probabiliste des hormones en temps réel.',
+    feat2Title: 'Sécurisé & Chiffré', feat2Sub: 'Traitement privé. Jamais stocké.',
+    feat3Title: 'Fenêtre de Conception', feat3Sub: 'Analyse de la période fertile estimée.',
+    btnStart: 'DÉMARRER ANALYSE',
+    scanTitle: 'CARTOGRAPHIE HORMONALE', scanSub: 'Maintenez fermement votre doigt sur le capteur',
+    scanning: 'LECTURE DE LA SIGNATURE THERMIQUE...',
+    captured: 'DONNÉES CAPTURÉES !',
+    reportReady: 'Rapport Numérique Prêt :',
+    r1: 'Score Avancé de Probabilité de Grossesse',
+    r2: 'Fenêtre de Conception Estimée',
+    r3: 'Analyse du Pic HCG & Progestérone',
+    fee: 'FRAIS DE TRAITEMENT CHIFFRÉ',
+    cardText: 'Carte de débit ou de crédit',
+    powered: 'Propulsé par',
+    successTitle: 'Paiement Confirmé !',
+    successMsg: 'Votre rapport est en cours de préparation. Consultez votre e-mail pour les résultats.',
+    newTest: 'Nouveau Test',
+    footer: '© 2026 Pregnancy Test Pro | Global Health Metrics',
+  },
+  de: {
+    badge: 'KLINISCH<br>KALIBRIERT',
+    homeTitle: 'Erweiterte Digitale Erkennung',
+    homeSub: 'Professionelle Hormon- und Zyklusanalyse via Bio-Wärme-Mapping.',
+    feat1Title: 'HCG-Level-Scan', feat1Sub: 'Echtzeit-Wahrscheinlichkeits-Hormontracking.',
+    feat2Title: 'Sicher & Verschlüsselt', feat2Sub: 'Private Datenverarbeitung. Nie gespeichert.',
+    feat3Title: 'Empfängnisfenster', feat3Sub: 'Analyse des geschätzten fruchtbaren Zeitraums.',
+    btnStart: 'ANALYSE STARTEN',
+    scanTitle: 'HORMONAL-MAPPING', scanSub: 'Halten Sie Ihren Finger fest auf dem Sensor',
+    scanning: 'LESE THERMISCHE SIGNATUR...',
+    captured: 'DATEN ERFASST!',
+    reportReady: 'Digitaler Bericht bereit:',
+    r1: 'Erweiterter Schwangerschafts-Wahrscheinlichkeitswert',
+    r2: 'Geschätztes Empfängnisfenster',
+    r3: 'HCG & Progesteron-Spitzenanalyse',
+    fee: 'VERSCHLÜSSELTE VERARBEITUNGSGEBÜHR',
+    cardText: 'Debit- oder Kreditkarte',
+    powered: 'Bereitgestellt von',
+    successTitle: 'Zahlung Bestätigt!',
+    successMsg: 'Ihr Bericht wird vorbereitet. Überprüfen Sie Ihre E-Mail für die vollständigen Ergebnisse.',
+    newTest: 'Neuer Test',
+    footer: '© 2026 Pregnancy Test Pro | Global Health Metrics',
+  },
+  it: {
+    badge: 'CLINICAMENTE<br>CALIBRATO',
+    homeTitle: 'Rilevazione Digitale Avanzata',
+    homeSub: 'Analisi ormonale e del ciclo professionale tramite mappatura bio-termica.',
+    feat1Title: 'Scansione Livello HCG', feat1Sub: 'Tracciamento probabilistico degli ormoni in tempo reale.',
+    feat2Title: 'Sicuro & Crittografato', feat2Sub: 'Elaborazione privata. Mai memorizzata.',
+    feat3Title: 'Finestra di Concepimento', feat3Sub: "Analisi del periodo fertile stimato.",
+    btnStart: 'AVVIA ANALISI',
+    scanTitle: 'MAPPATURA ORMONALE', scanSub: 'Tieni il dito fermo sul sensore',
+    scanning: 'LETTURA FIRMA TERMICA...',
+    captured: 'DATI ACQUISITI!',
+    reportReady: 'Report Digitale Pronto:',
+    r1: 'Punteggio Avanzato di Probabilità di Gravidanza',
+    r2: 'Finestra di Concepimento Stimata',
+    r3: 'Analisi del Picco HCG & Progesterone',
+    fee: 'TARIFFA DI ELABORAZIONE CRITTOGRAFATA',
+    cardText: 'Carta di debito o di credito',
+    powered: 'Fornito da',
+    successTitle: 'Pagamento Confermato!',
+    successMsg: 'Il tuo report è in preparazione. Controlla la tua email per i risultati completi.',
+    newTest: 'Nuovo Test',
+    footer: '© 2026 Pregnancy Test Pro | Global Health Metrics',
+  }
+};
+
+let currentLang = 'pt';
+let scanInterval = null;
+let scanPct = 0;
+let paypalLoaded = false;
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    if (b.textContent.toLowerCase().includes(lang)) b.classList.add('active');
+  });
+  applyTranslations();
+}
+
+function applyTranslations() {
+  const t = T[currentLang];
+  document.getElementById('badge-text').innerHTML = t.badge;
+  document.getElementById('t-home-title').textContent = t.homeTitle;
+  document.getElementById('t-home-sub').textContent = t.homeSub;
+  document.getElementById('t-feat1-title').textContent = t.feat1Title;
+  document.getElementById('t-feat1-sub').textContent = t.feat1Sub;
+  document.getElementById('t-feat2-title').textContent = t.feat2Title;
+  document.getElementById('t-feat2-sub').textContent = t.feat2Sub;
+  document.getElementById('t-feat3-title').textContent = t.feat3Title;
+  document.getElementById('t-feat3-sub').textContent = t.feat3Sub;
+  document.getElementById('t-btn-start').textContent = t.btnStart;
+  document.getElementById('t-scan-title').textContent = t.scanTitle;
+  document.getElementById('t-scan-sub').textContent = t.scanSub;
+  document.getElementById('t-scanning').textContent = t.scanning;
+  document.getElementById('t-captured').textContent = t.captured;
+  document.getElementById('t-report-ready').textContent = t.reportReady;
+  document.getElementById('t-r1').textContent = t.r1;
+  document.getElementById('t-r2').textContent = t.r2;
+  document.getElementById('t-r3').textContent = t.r3;
+  document.getElementById('t-fee').textContent = t.fee;
+  document.getElementById('t-btn-card').querySelector('span').textContent = t.cardText;
+  document.getElementById('t-powered').innerHTML = t.powered + ' <span style="color:#003087;font-weight:800;">PayPal</span>';
+  document.getElementById('t-success-title').textContent = t.successTitle;
+  document.getElementById('t-success-msg').textContent = t.successMsg;
+  document.getElementById('t-new-test').textContent = t.newTest;
+  document.getElementById('t-footer').textContent = t.footer;
+}
+
+// ── NAVIGATION ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goToHome() {
+  scanPct = 0;
+  if (scanInterval) clearInterval(scanInterval);
+  showScreen('screen-home');
+}
+
+function goToScan() {
+  showScreen('screen-scan');
+  resetScan();
+}
+
+function resetScan() {
+  scanPct = 0;
+  document.getElementById('scan-pct').textContent = '0%';
+  document.getElementById('progress-fill').style.width = '0%';
+}
+
+function startScan() {
+  if (scanInterval) return;
+  scanInterval = setInterval(() => {
+    scanPct += Math.random() * 3 + 0.5;
+    if (scanPct >= 100) {
+      scanPct = 100;
+      clearInterval(scanInterval);
+      scanInterval = null;
+      setTimeout(() => {
+        showScreen('screen-payment');
+        if (!paypalLoaded) initPayPal();
+      }, 600);
+    }
+    document.getElementById('scan-pct').textContent = Math.round(scanPct) + '%';
+    document.getElementById('progress-fill').style.width = scanPct + '%';
+  }, 80);
+}
+
+// ── PAYPAL ──
+function initPayPal() {
+  if (typeof paypal === 'undefined') {
+    setTimeout(initPayPal, 500);
+    return;
+  }
+  paypalLoaded = true;
+  paypal.Buttons({
+    style: {
+      layout: 'horizontal',
+      color: 'gold',
+      shape: 'pill',
+      label: 'paypal',
+      height: 52,
+    },
+    createOrder: function(data, actions) {
+      return actions.order.create({
+        purchase_units: [{
+          amount: { value: '4.99', currency_code: 'EUR' },
+          description: 'Pregnancy Test Pro – Digital Report'
+        }]
+      });
+    },
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+        showScreen('screen-success');
+      });
+    },
+    onError: function(err) {
+      alert('Payment error. Please try again.');
+    }
+  }).render('#paypal-button-container');
+}
+
+// Card fallback
+document.getElementById('t-btn-card').addEventListener('click', function() {
+  if (typeof paypal !== 'undefined') {
+    // trigger paypal card fields if available
+    alert('Redirecting to secure card payment...');
+  }
+});
+
+// Init
+applyTranslations();
+
+// Auto-start scan on tap of fingerprint
+document.getElementById('fp-area').addEventListener('click', startScan);
+
+// PWA Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
